@@ -2,13 +2,14 @@ package MAIN;
 
 import GUI.FRM_Venta;
 import LOGIC.Controlador;
+import java.io.IOException;
 
 /**
  * @author <a href="https://github.com/JQuinteroC">JQuinteroC</a>
  */
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         FRM_Venta vv = new FRM_Venta();
         Controlador u = new Controlador(vv);
 
