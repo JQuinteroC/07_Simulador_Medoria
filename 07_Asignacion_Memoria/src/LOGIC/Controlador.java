@@ -60,7 +60,7 @@ public class Controlador implements ActionListener {
             } else if (e.getSource().equals(v.btnNext)) {
 
             } else if (e.getSource().equals(v.btnWorst)) {
-               
+               //
             } else if (e.getSource().equals(v.btnDelete)) {
                 v.cont.removeAll();
                 v.sp.repaint();
