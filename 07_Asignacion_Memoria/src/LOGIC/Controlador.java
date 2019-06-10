@@ -10,9 +10,12 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -33,14 +36,28 @@ public class Controlador implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(v.btnBest)) {
-            
-        } else if (e.getSource().equals(v.btnFirst)) {
+        if (comprobarExt()) {
+            int size = (int) v.spnTamano.getValue();
+            int pos = -1;
+            if (e.getSource().equals(v.btnBest)) {
 
-        } else if (e.getSource().equals(v.btnNext)) {
+            } else if (e.getSource().equals(v.btnFirst)) {
+                for (int i = 0; i < espacios.size(); i = i + 2) {
+                    if (espacios.get(i) >= size) {
+                        pos = espacios.get(i + 1);
+                        break;
+                    }
+                }
+                try {
+                    actualizarDibujo(pos, v.txtNombre.getText(), size, v);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al editar la memoria");
+                }
+            } else if (e.getSource().equals(v.btnNext)) {
 
-        } else if (e.getSource().equals(v.btnWorst)) {
+            } else if (e.getSource().equals(v.btnWorst)) {
 
+            }
         } else if (e.getSource().equals(v.btnDelete)) {
             v.cont.removeAll();
             v.sp.repaint();
@@ -123,5 +140,51 @@ public class Controlador implements ActionListener {
         nombres.add("p1");
         nombres.add("p3");
         nombres.add("p5");
+    }
+
+    boolean comprobarExt() {
+        String n = v.txtNombre.getText();
+        int va = (int) v.spnTamano.getValue();
+        if (n.isEmpty()) {
+            return false;
+        } else if (va == 0) {
+            return false;
+        }
+
+        if (nombres.contains(n)) {
+            return false;
+        } else {
+            boolean pru = true;
+            for (int i = 0; i < espacios.size(); i = i + 2) {
+                if (espacios.get(i) >= va) {
+                    pru = true;
+                    break;
+                } else {
+                    pru = false;
+                }
+            }
+            return pru;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    void actualizarDibujo(int pos,String name,int size, FRM_Venta d) throws IOException {
+        // Imagen
+        BufferedImage imagen = ImageIO.read(new File("estado0.jpg"));
+        Graphics k = imagen.getGraphics();
+
+        // Dibujo
+        k.setColor(Color.red);
+        k.drawRect(15, 5, 80, 336);
+
+        // Texto
+        k.drawString(name + " " + size + "m", 20, 58);
+
+        // Guardar imagen
+        try {
+            ImageIO.write(imagen, "jpg", new File("estado1.jpg"));
+        } catch (IOException e) {
+            System.out.println("Error de escritura");
+        }
     }
 }
