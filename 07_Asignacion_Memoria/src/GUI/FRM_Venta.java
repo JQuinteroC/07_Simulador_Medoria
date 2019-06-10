@@ -53,9 +53,9 @@ public class FRM_Venta extends JFrame {
         btnDelete.setBounds(410, 55, 90, 25);
         btnDelete.setFont(new Font("verdana", Font.BOLD, 13));
 
-        sp.setBounds(10, 90, 490, 310);
+        sp.setBounds(10, 90, 490, 400);
 
-        setSize(525, 440);
+        setSize(525, 530);
         setLocationRelativeTo(null);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
