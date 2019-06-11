@@ -10,8 +10,6 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -51,8 +49,8 @@ public class Controlador implements ActionListener {
             if (e.getSource().equals(v.btnBest)) {
                 int menor = 48;
                 for (int i = 0; i < espacios.size(); i = i + 2) {
-                    if (espacios.get(i)-size >= 0 && espacios.get(i)-size < menor ) {
-                        menor = espacios.get(i)-size;
+                    if (espacios.get(i) - size >= 0 && espacios.get(i) - size < menor) {
+                        menor = espacios.get(i) - size;
                         pos[0] = espacios.get(i + 1);
                         last = pos[0] + size;
                         pos[1] = i;
@@ -82,8 +80,16 @@ public class Controlador implements ActionListener {
                 for (int i = 1; i < espacios.size(); i = i + 2) {
                     if (espacios.get(i) == last) {
                         pos[0] = espacios.get(i);
-                        last = pos[0] + size;
-                        pos[1] = i - 1;
+                        if (pos[0] + size == 48) {
+                            last = espacios.get(1) + size;
+                            pos[0] = espacios.get(1);
+                            pos[1] = 0;
+
+                        } else {
+                            last = pos[0] + size;
+                            pos[1] = i - 1;
+
+                        }
                         if (espacios.get(i - 1) >= size) {
                             try {
                                 actualizarDibujo(pos, v.txtNombre.getText(), size, v);
@@ -116,6 +122,7 @@ public class Controlador implements ActionListener {
                 int may = espacios.get(0);
                 for (int i = 0; i < espacios.size(); i = i + 2) {
                     if (espacios.get(i) >= may) {
+                        may = espacios.get(i);
                         pos[0] = espacios.get(i + 1);
                         pos[1] = i;
                         last = pos[0] + size;
@@ -223,7 +230,7 @@ public class Controlador implements ActionListener {
             v.txtNombre.setText(null);
             v.txtNombre.requestFocus();
             return false;
-        } else if (espacios.size() == 0) {
+        } else if (espacios.isEmpty()) {
             return false;
         } else {
             boolean pru = true;
@@ -253,7 +260,7 @@ public class Controlador implements ActionListener {
         BufferedImage imagenref = ImageIO.read(new File("estado" + index + ".jpg"));
         Graphics l = imagenref.getGraphics();
 
-        int tam = 0;
+        int tam;
         if (size == 1) {
             tam = 18;
         } else {
@@ -294,7 +301,7 @@ public class Controlador implements ActionListener {
     }
 
     void actualizar(int pos[], String name, int size) {
-        if (espacios.size() != 0) {
+        if (!espacios.isEmpty()) {
             nombres.add(name);
 
             if (size == espacios.get(pos[1])) {
