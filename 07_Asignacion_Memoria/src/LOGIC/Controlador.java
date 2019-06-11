@@ -25,6 +25,7 @@ public class Controlador implements ActionListener {
 
     FRM_Venta v;
     int index = 0;
+    int last = 26;
     ArrayList<Integer> espacios = new ArrayList(); // pares tamaño, impares posición
     ArrayList<String> nombres = new ArrayList();
 
@@ -37,17 +38,36 @@ public class Controlador implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (comprobarExt()) {
+        if (e.getSource().equals(v.btnDelete)) {
+            v.cont.removeAll();
+            v.sp.repaint();
+
+            llenadoBase(true);
+        } else if (comprobarExt()) {
             int size = (int) v.spnTamano.getValue();
             int[] pos = new int[2];
             pos[0] = -1;
             pos[1] = -1;
             if (e.getSource().equals(v.btnBest)) {
-
+                int menor = 48;
+                for (int i = 0; i < espacios.size(); i = i + 2) {
+                    if (espacios.get(i)-size >= 0 && espacios.get(i)-size < menor ) {
+                        menor = espacios.get(i)-size;
+                        pos[0] = espacios.get(i + 1);
+                        last = pos[0] + size;
+                        pos[1] = i;
+                    }
+                }
+                try {
+                    actualizarDibujo(pos, v.txtNombre.getText(), size, v);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al editar la memoria");
+                }
             } else if (e.getSource().equals(v.btnFirst)) {
                 for (int i = 0; i < espacios.size(); i = i + 2) {
                     if (espacios.get(i) >= size) {
                         pos[0] = espacios.get(i + 1);
+                        last = pos[0] + size;
                         pos[1] = i;
                         break;
                     }
@@ -58,22 +78,56 @@ public class Controlador implements ActionListener {
                     JOptionPane.showMessageDialog(null, "Error al editar la memoria");
                 }
             } else if (e.getSource().equals(v.btnNext)) {
+                boolean a = true;
+                for (int i = 1; i < espacios.size(); i = i + 2) {
+                    if (espacios.get(i) == last) {
+                        pos[0] = espacios.get(i);
+                        last = pos[0] + size;
+                        pos[1] = i - 1;
+                        if (espacios.get(i - 1) >= size) {
+                            try {
+                                actualizarDibujo(pos, v.txtNombre.getText(), size, v);
+                            } catch (IOException ex) {
+                                JOptionPane.showMessageDialog(null, "Error al editar la memoria");
+                            }
+                            a = false;
+                            break;
+                        }
+                    }
+                }
+                if (a) {
+                    for (int i = pos[1]; i < 2 * espacios.size(); i = i + 2) {
+                        int tem = i % espacios.size();
+                        if (espacios.get(tem) >= size) {
+                            pos[0] = espacios.get(tem + 1);
+                            last = pos[0] + size;
+                            pos[1] = tem;
+                            try {
+                                actualizarDibujo(pos, v.txtNombre.getText(), size, v);
+                            } catch (IOException ex) {
+                                JOptionPane.showMessageDialog(null, "Error al editar la memoria");
+                            }
+                            break;
+                        }
+                    }
+                }
 
             } else if (e.getSource().equals(v.btnWorst)) {
-               //
-            } else if (e.getSource().equals(v.btnDelete)) {
-                v.cont.removeAll();
-                v.sp.repaint();
-
-                llenadoBase(true);
+                int may = espacios.get(0);
+                for (int i = 0; i < espacios.size(); i = i + 2) {
+                    if (espacios.get(i) >= may) {
+                        pos[0] = espacios.get(i + 1);
+                        pos[1] = i;
+                        last = pos[0] + size;
+                    }
+                }
+                try {
+                    actualizarDibujo(pos, v.txtNombre.getText(), size, v);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al editar la memoria");
+                }
             }
-        } else if (e.getSource().equals(v.btnDelete)) {
-            v.cont.removeAll();
-            v.sp.repaint();
-
-            llenadoBase(true);
         }
-
     }
 
     void dibujarBase(int i, FRM_Venta d) throws IOException {
@@ -101,8 +155,8 @@ public class Controlador implements ActionListener {
         // Texto
         k.drawString("OS 8m", 20, 58);
         k.drawString("p1 8m", 20, 115);
-        k.drawString("p3 2m", 20, 185);
-        k.drawString("p5 8m", 20, 310);
+        k.drawString("p5 2m", 20, 185);
+        k.drawString("p3 8m", 20, 310);
 
         k.drawString("0", 6, 15);
         k.drawString("8", 6, 61);
@@ -148,9 +202,10 @@ public class Controlador implements ActionListener {
             nombres.clear();
             nombres.add("OS");
             nombres.add("p1");
-            nombres.add("p3");
             nombres.add("p5");
+            nombres.add("p3");
             index = 0;
+            last = 26;
         }
     }
 
@@ -166,6 +221,9 @@ public class Controlador implements ActionListener {
         if (nombres.contains(n)) {
             JOptionPane.showMessageDialog(null, "El nombre " + n + " ya esta en memoria");
             v.txtNombre.setText(null);
+            v.txtNombre.requestFocus();
+            return false;
+        } else if (espacios.size() == 0) {
             return false;
         } else {
             boolean pru = true;
@@ -181,6 +239,7 @@ public class Controlador implements ActionListener {
             if (!pru) {
                 JOptionPane.showMessageDialog(null, "No hay suficiente tamaño en memoria");
                 v.spnTamano.setValue(0);
+                v.spnTamano.requestFocus();
             }
             return pru;
         }
@@ -235,15 +294,17 @@ public class Controlador implements ActionListener {
     }
 
     void actualizar(int pos[], String name, int size) {
-        nombres.add(name);
+        if (espacios.size() != 0) {
+            nombres.add(name);
 
-        if (size == espacios.get(pos[1])) {
-            espacios.remove(pos[1] + 1);
-            espacios.remove(pos[1]);
-        } else {
-            int ta = espacios.get(pos[1]) - size;
-            espacios.set(pos[1], ta);
-            espacios.set(pos[1] + 1, espacios.get(pos[1] + 1) + size);
+            if (size == espacios.get(pos[1])) {
+                espacios.remove(pos[1] + 1);
+                espacios.remove(pos[1]);
+            } else {
+                int ta = espacios.get(pos[1]) - size;
+                espacios.set(pos[1], ta);
+                espacios.set(pos[1] + 1, espacios.get(pos[1] + 1) + size);
+            }
         }
     }
 }
