@@ -105,7 +105,7 @@ public class Controlador implements ActionListener {
 
                 if (a) {
                     int posi = 0;
-                    if (last == espacios.get((int) (espacios.size() - .1)) || last == 48) {
+                    if (last == espacios.get((int) (espacios.size() - .1)) || last == 48 || espacios.size() == 2) {
                         last = espacios.get(1) + size;
                         pos[0] = espacios.get(1);
                         pos[1] = 0;
