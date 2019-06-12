@@ -30,32 +30,32 @@ public class FRM_Venta extends JFrame {
 
     public void mostrar() {
         lblTitulo.setFont(new java.awt.Font("Verdana", 1, 25));
-        lblTitulo.setBounds(100, 5, 350, 45);
+        lblTitulo.setBounds(70, 5, 350, 45);
 
-        txtNombre.setBounds(10, 55, 50, 25);
+        txtNombre.setBounds(10, 55, 90, 25);
         txtNombre.setFont(fuente);
 
-        spnTamano.setBounds(65, 55, 50, 25);
+        spnTamano.setBounds(10, 90, 90, 25);
         spnTamano.setFont(fuente);
 
-        btnBest.setBounds(120, 55, 65, 25);
+        btnBest.setBounds(10, 125, 90, 25);
         btnBest.setFont(fuente);
 
-        btnWorst.setBounds(190, 55, 75, 25);
+        btnWorst.setBounds(10, 160, 90, 25);
         btnWorst.setFont(fuente);
 
-        btnFirst.setBounds(270, 55, 65, 25);
+        btnFirst.setBounds(10, 195, 90, 25);
         btnFirst.setFont(fuente);
 
-        btnNext.setBounds(340, 55, 65, 25);
+        btnNext.setBounds(10, 230, 90, 25);
         btnNext.setFont(fuente);
 
-        btnDelete.setBounds(410, 55, 90, 25);
+        btnDelete.setBounds(10, 265, 90, 25);
         btnDelete.setFont(new Font("verdana", Font.BOLD, 13));
 
-        sp.setBounds(10, 90, 490, 400);
+        sp.setBounds(110, 55, 320, 430);
 
-        setSize(525, 530);
+        setSize(455, 530);
         setLocationRelativeTo(null);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

@@ -78,19 +78,18 @@ public class Controlador implements ActionListener {
             } else if (e.getSource().equals(v.btnNext)) {
                 boolean a = true;
                 for (int i = 1; i < espacios.size(); i = i + 2) {
-                    if (espacios.get(i) == last) {
-                        pos[0] = espacios.get(i);
-                        if (pos[0] + size == 48) {
+                    int tem = i;
+                    if (espacios.get(tem) == last) {
+                        pos[0] = espacios.get(tem);
+                        if (espacios.get(tem) + size == 48) {
                             last = espacios.get(1) + size;
                             pos[0] = espacios.get(1);
                             pos[1] = 0;
-
                         } else {
                             last = pos[0] + size;
-                            pos[1] = i - 1;
-
+                            pos[1] = tem - 1;
                         }
-                        if (espacios.get(i - 1) >= size) {
+                        if (espacios.get(tem - 1) >= size) {
                             try {
                                 actualizarDibujo(pos, v.txtNombre.getText(), size, v);
                             } catch (IOException ex) {
@@ -98,11 +97,22 @@ public class Controlador implements ActionListener {
                             }
                             a = false;
                             break;
+                        } else {
+                            last = pos[0];
                         }
                     }
                 }
+
                 if (a) {
-                    for (int i = pos[1]; i < 2 * espacios.size(); i = i + 2) {
+                    int posi = 0;
+                    if (last == espacios.get((int) (espacios.size() - .1)) || last == 48) {
+                        last = espacios.get(1) + size;
+                        pos[0] = espacios.get(1);
+                        pos[1] = 0;
+                    } else {
+                        posi = pos[1];
+                    }
+                    for (int i = posi; i < 2 * espacios.size(); i = i + 2) {
                         int tem = i % espacios.size();
                         if (espacios.get(tem) >= size) {
                             pos[0] = espacios.get(tem + 1);
@@ -185,10 +195,10 @@ public class Controlador implements ActionListener {
     void llenadoBase(boolean nuevo) {
         // Memoria base
         Image img = new ImageIcon("estado0.jpg").getImage();
-        ImageIcon img2 = new ImageIcon(img.getScaledInstance(100, 390, Image.SCALE_SMOOTH));
+        ImageIcon img2 = new ImageIcon(img.getScaledInstance(140, 420, Image.SCALE_SMOOTH));
 
         JLabel d = new JLabel(img2);
-        d.setBounds(10, 3, 100, 390);
+        d.setBounds(10, 3, 140, 420);
         v.cont.add(d);
         v.sp.repaint();
 
@@ -252,7 +262,6 @@ public class Controlador implements ActionListener {
         }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////
     void actualizarDibujo(int pos[], String name, int size, FRM_Venta d) throws IOException {
         actualizar(pos, name, size);
 
@@ -292,9 +301,9 @@ public class Controlador implements ActionListener {
         v.sp.repaint();
         llenadoBase(false);
         Image img = new ImageIcon("estado" + (index + 1) + ".jpg").getImage();
-        ImageIcon img2 = new ImageIcon(img.getScaledInstance(100, 390, Image.SCALE_SMOOTH));
+        ImageIcon img2 = new ImageIcon(img.getScaledInstance(140, 420, Image.SCALE_SMOOTH));
         JLabel lab = new JLabel(img2);
-        lab.setBounds(130, 3, 100, 390);
+        lab.setBounds(170, 3, 140, 420);
         d.cont.add(lab);
         d.sp.repaint();
         index++;
